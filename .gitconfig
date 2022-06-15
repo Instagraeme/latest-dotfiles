@@ -3,3 +3,5 @@
 # Please adapt and uncomment the following lines:
 name = Graeme Smith
 email = gs78@me.com
+[credential]
+	helper = cache --timeout=86400
