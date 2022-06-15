@@ -99,7 +99,13 @@ alias du='du -h'
 alias dumax='dumax_func(){ du -h --max-depth="$1" }; dumax_func'
 alias httpserve='python3 -m http.server 2182'
 
-if ! exa_loc="$(type -p "$exa")" || [[ -z $exa_loc ]]; then
+if command -v bat > /dev/null 2>&1; then
+  alias cat="bat"
+elif command -v batcat > /dev/null 2>&1; then
+  alias cat="batcat"
+fi
+
+if command -v exa > /dev/null 2>&1; then
 
   case $USER in
     root)
@@ -110,7 +116,7 @@ if ! exa_loc="$(type -p "$exa")" || [[ -z $exa_loc ]]; then
       ;;
   esac
 
-elif ! colorls_loc="$(type -p "$colorls")" || [[ -z $colorls_loc ]]; then
+elif command -v colorls > /dev/null 2>&1; then
 
   case $USER in
     root)
@@ -131,8 +137,6 @@ else
       ;;
   esac
 fi
-
-plugins=()
 
 case `uname` in
   Darwin)
