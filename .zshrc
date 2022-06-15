@@ -124,7 +124,7 @@ else
   esac
 fi
 
-plugins=(git colored-man-pages colorize z)
+plugins=()
 
 case `uname` in
   Darwin)
@@ -139,11 +139,15 @@ case `uname` in
       done
       compinit -C
     fi
-    plugins+=(brew)
+    plugins=(git colored-man-pages colorize z brew)
     ;;
   Linux)
-    alias update='apt update && apt -y upgrade && apt autoremove && apt autoclean'
-    plugins+=(docker)
+    source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+    source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+    alias update='apt update && apt -y upgrade && apt -y autoremove && apt -y autoclean'
+    plugins=(git colored-man-pages colorize z docker zsh-autosuggestions zsh-syntax-highlighting)
+    
     ;;
 esac
 
