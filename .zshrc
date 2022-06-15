@@ -92,11 +92,36 @@ alias icloud="cd /Users/graeme/Library/Mobile\ Documents/com~apple~CloudDocs"
 alias server="ssh server"
 
 if ! exa_loc="$(type -p "$exa")" || [[ -z $exa_loc ]]; then
-	alias ls='exa -l --icons -g -a --header'
+
+  case $USER in
+    root)
+      alias ls='exa -l --icons -g -a --header'
+      ;;
+    *)
+      alias ls='exa -l --icons -g --header'
+      ;;
+  esac
+
 elif ! colorls_loc="$(type -p "$colorls")" || [[ -z $colorls_loc ]]; then
-	alias ls="colorls --sd -Al"
+
+  case $USER in
+    root)
+      alias ls="colorls --sd -Al"
+      ;;
+    *)
+      alias ls="colorls --sd -l"
+      ;;
+  esac
 else
-	alias ls="ls -l"
+
+  case $USER in
+    root)
+      alias ls="ls -la"
+      ;;
+    *)
+      alias ls="ls -l"
+      ;;
+  esac
 fi
 
 plugins=(git colored-man-pages colorize z)
@@ -104,22 +129,22 @@ plugins=(git colored-man-pages colorize z)
 case `uname` in
   Darwin)
     # commands for OS X go here
-	source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-	source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-	if type brew &>/dev/null; then
-		FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
-    		autoload -Uz compinit
-		for dump in ~/.zcompdump(N.mh+168); do
-    			compinit
-		done
-		compinit -C
-  	fi
-	plugins+=(brew)
-	;;
+    source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+    source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+    if type brew &>/dev/null; then
+      FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+      autoload -Uz compinit
+      for dump in ~/.zcompdump(N.mh+168); do
+	compinit
+      done
+      compinit -C
+    fi
+    plugins+=(brew)
+    ;;
   Linux)
-	alias update='apt update && apt -y upgrade && apt autoremove && apt autoclean'
-	plugins+=(docker)
-  ;;
+    alias update='apt update && apt -y upgrade && apt autoremove && apt autoclean'
+    plugins+=(docker)
+    ;;
 esac
 
 
