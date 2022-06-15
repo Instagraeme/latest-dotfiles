@@ -139,14 +139,14 @@ case `uname` in
       done
       compinit -C
     fi
-    plugins=(git colored-man-pages colorize z brew)
+    plugins=(git colored-man-pages colorize z brew macos aliases command-not-found)
     ;;
   Linux)
     source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
     source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
     alias update='apt update && apt -y upgrade && apt -y autoremove && apt -y autoclean'
-    plugins=(git colored-man-pages colorize z docker zsh-autosuggestions zsh-syntax-highlighting)
+    plugins=(git colored-man-pages colorize z docker aliases command-not-found)
     
     ;;
 esac
