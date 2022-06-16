@@ -1,0 +1,134 @@
+#!/bin/sh
+
+system_type=$(uname -s)
+
+if [ "$system_type" = "Linux" ]; then
+
+  # update system
+  apt update && apt -y upgrade && apt -y autoremove && apt -y autoclean
+
+  # install neovim if it's missing
+  if ! command -v nvim >/dev/null 2>&1; then
+    echo "Installing Neovim"
+    apt install nvim 
+  fi
+ 
+  # install exa if it's missing
+  if ! command -v exa >/dev/null 2>&1; then
+    echo "Installing exa"
+    apt install exa 
+  fi
+
+  # install gpg if it is missing
+  if ! command -v gpg >/dev/null 2>&1; then
+    echo "Installing gpg"
+    apt install gpg 
+  fi
+
+  # install bat if it is missing
+  if ! command -v bat >/dev/null 2>&1; then
+    echo "Installing bat"
+    apt install bat 
+  fi
+
+  # install zsh-autosuggestions if it is missing
+  if [ ! -f "/opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
+    echo "Installing zsh-autosuggestions" 
+    apt install zsh-autosuggestions
+  fi
+
+  # install zsh-syntax-highlighting if it is missing
+  if [ ! -f "/opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
+    echo "Installing zsh-syntax-highlighting" 
+    apt install zsh-syntax-highlighting
+  fi
+  
+  # install zsh-completions if it is missing
+  if [ ! -d "/opt/homebrew/share/zsh-completions" ]; then
+    echo "Installing zsh-completions" 
+    apt install zsh-completions
+  fi
+
+fi
+
+
+if [ "$system_type" = "Darwin" ]; then
+
+  # install homebrew if it's missing
+  if ! command -v brew >/dev/null 2>&1; then
+    echo "Installing homebrew"
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  fi
+
+  if [ -f "$HOME/.Brewfile" ]; then
+    echo "Updating homebrew bundle"
+    brew bundle --global
+  fi
+  
+  # install neovim if it's missing
+  if ! command -v nvim >/dev/null 2>&1; then
+    echo "Installing Neovim"
+    brew install nvim 
+  fi
+ 
+  # install exa if it's missing
+  if ! command -v exa >/dev/null 2>&1; then
+    echo "Installing exa"
+    brew install exa 
+  fi
+
+  # install gpg if it is missing
+  if ! command -v gpg >/dev/null 2>&1; then
+    echo "Installing gpg"
+    brew install gpg 
+  fi
+
+  # install bat if it is missing
+  if ! command -v bat >/dev/null 2>&1; then
+    echo "Installing bat"
+    brew install bat 
+  fi
+
+  # install zsh-autosuggestions if it is missing
+  if [ ! -f "/opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
+    echo "Installing zsh-autosuggestions" 
+    brew install zsh-autosuggestions
+  fi
+
+  # install zsh-syntax-highlighting if it is missing
+  if [ ! -f "/opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
+    echo "Installing zsh-syntax-highlighting" 
+    brew install zsh-syntax-highlighting
+  fi
+  
+  # install zsh-completions if it is missing
+  if [ ! -d "/opt/homebrew/share/zsh-completions" ]; then
+    echo "Installing zsh-completions" 
+    brew install zsh-completions
+  fi
+ 
+  if ! mdfind "kMDItemCFBundleIdentifier == com.googlecode.iterm2" >/dev/null 2>&1; then
+    echo "Installing iTerm2" 
+    brew cask install iterm2
+  fi
+
+  if [ -d "$HOME/.config/iTerm2" ]; then
+    echo "Setting iTerm preference folder"
+    defaults write com.googlecode.iterm2 PrefsCustomFolder "$HOME/.config/iTerm2"
+  fi
+fi
+
+# install oh-my-zsh if it is missing
+
+if [ -f "$HOME/.oh-my-zsh" ]; then
+  echo "Install oh-my-zsh"
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+fi
+  
+echo "Updating the yadm repo origin URL"
+yadm remote set-url origin "git@github.com:Instagraeme/latest-dotfiles.git"
+
+if command -v nvim >/dev/null 2>&1; then
+  echo "Bootstraping neovim"
+  nvim '+PlugUpdate' '+PlugClean!' '+PlugUpdate' '+qall'
+fi
