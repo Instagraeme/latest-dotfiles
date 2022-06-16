@@ -6,47 +6,65 @@ if [ "$system_type" = "Linux" ]; then
 
   # update system
   apt update && apt -y upgrade && apt -y autoremove && apt -y autoclean
+  
+  # install git if it is missing
+  if ! command -v bat >/dev/null 2>&1; then
+    echo "Installing git"
+     apt -y install git
+  fi
 
+  # install curl if it is missing
+  if ! command -v curl >/dev/null 2>&1; then
+    echo "Installing curl"
+     apt -y install curl
+  fi
+
+  # install python3 if it is missing
+  if ! command -v python3 >/dev/null 2>&1; then
+    echo "Installing python 3"
+     apt -y install python3
+  fi
+  
   # install neovim if it's missing
   if ! command -v nvim >/dev/null 2>&1; then
     echo "Installing Neovim"
-    apt install nvim 
+     apt -y install nvim 
   fi
  
   # install exa if it's missing
   if ! command -v exa >/dev/null 2>&1; then
     echo "Installing exa"
-    apt install exa 
+     apt -y install exa 
   fi
 
   # install gpg if it is missing
   if ! command -v gpg >/dev/null 2>&1; then
     echo "Installing gpg"
-    apt install gpg 
+     apt -y install gpg 
   fi
 
   # install bat if it is missing
-  if ! command -v bat >/dev/null 2>&1; then
-    echo "Installing bat"
-    apt install bat 
+  if ! command -v batcat >/dev/null 2>&1; then
+    echo "Installing batcat"
+     apt -y install batcat 
   fi
 
   # install zsh-autosuggestions if it is missing
   if [ ! -f "/opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
     echo "Installing zsh-autosuggestions" 
-    apt install zsh-autosuggestions
+     apt -y install zsh-autosuggestions
   fi
 
   # install zsh-syntax-highlighting if it is missing
   if [ ! -f "/opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
     echo "Installing zsh-syntax-highlighting" 
-    apt install zsh-syntax-highlighting
+     apt -y install zsh-syntax-highlighting
   fi
   
   # install zsh-completions if it is missing
   if [ ! -d "/opt/homebrew/share/zsh-completions" ]; then
     echo "Installing zsh-completions" 
-    apt install zsh-completions
+     apt -y install zsh-completions
   fi
 
 fi
