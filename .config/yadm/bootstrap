@@ -28,7 +28,7 @@ if [ "$system_type" = "Linux" ]; then
   # install neovim if it's missing
   if ! command -v nvim >/dev/null 2>&1; then
     echo "Installing Neovim"
-     apt -y install nvim 
+     apt -y install neovim 
   fi
  
   # install exa if it's missing
@@ -44,9 +44,17 @@ if [ "$system_type" = "Linux" ]; then
   fi
 
   # install bat if it is missing
-  if ! command -v batcat >/dev/null 2>&1; then
-    echo "Installing batcat"
-     apt -y install batcat 
+  if ! command -v bat >/dev/null 2>&1; then
+    echo "Installing bat"
+     apt -y install bat 
+  fi
+  
+  # install command-not-found if it is missing
+  if ! command -v command-not-found >/dev/null 2>&1; then
+    echo "Installing command-not-found"
+     apt -y install command-not-found
+     apt update
+     update-command-not-found
   fi
 
   # install zsh-autosuggestions if it is missing
@@ -123,6 +131,12 @@ if [ "$system_type" = "Darwin" ]; then
   if [ ! -d "/opt/homebrew/share/zsh-completions" ]; then
     echo "Installing zsh-completions" 
     brew install zsh-completions
+  fi
+  
+  if ! command -v command-not-found >/dev/null 2>&1; then
+    echo "Installing command-not-found"
+     brew install command-not-found
+     update-command-not-found
   fi
  
   if ! mdfind "kMDItemCFBundleIdentifier == com.googlecode.iterm2" >/dev/null 2>&1; then
