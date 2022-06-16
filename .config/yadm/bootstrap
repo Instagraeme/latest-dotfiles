@@ -54,6 +54,7 @@ if [ "$system_type" = "Linux" ]; then
     echo "Installing command-not-found"
      apt -y install command-not-found
      apt update
+     apt-file update
      update-command-not-found
   fi
 
@@ -68,13 +69,9 @@ if [ "$system_type" = "Linux" ]; then
     echo "Installing zsh-syntax-highlighting" 
      apt -y install zsh-syntax-highlighting
   fi
-  
-  # install zsh-completions if it is missing
-  if [ ! -d "/opt/homebrew/share/zsh-completions" ]; then
-    echo "Installing zsh-completions" 
-     apt -y install zsh-completions
-  fi
 
+  echo "Change shell to zsh"
+  chsh /bin/zsh
 fi
 
 
@@ -152,7 +149,7 @@ fi
 
 # install oh-my-zsh if it is missing
 
-if [ -d "$HOME/.oh-my-zsh" ]; then
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
   echo "Install oh-my-zsh"
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 fi
