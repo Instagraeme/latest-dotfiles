@@ -71,7 +71,7 @@ if [ "$system_type" = "Linux" ]; then
   fi
 
   echo "Change shell to zsh"
-  chsh /bin/zsh
+  chsh -s $(which zsh)
 fi
 
 
@@ -147,12 +147,6 @@ if [ "$system_type" = "Darwin" ]; then
   fi
 fi
 
-# install oh-my-zsh if it is missing
-
-if [ ! -d "$HOME/.oh-my-zsh" ]; then
-  echo "Install oh-my-zsh"
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-fi
   
 echo "Updating the yadm repo origin URL"
 yadm remote set-url origin "git@github.com:Instagraeme/latest-dotfiles.git"
@@ -161,3 +155,11 @@ if command -v nvim >/dev/null 2>&1; then
   echo "Bootstraping neovim"
   nvim '+PlugUpdate' '+PlugClean!' '+PlugUpdate' '+qall'
 fi
+
+# install oh-my-zsh if it is missing MUST BE LAST
+
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+  echo "Install oh-my-zsh"
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+fi
+
