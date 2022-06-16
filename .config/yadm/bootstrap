@@ -70,6 +70,13 @@ if [ "$system_type" = "Linux" ]; then
      apt -y install zsh-syntax-highlighting
   fi
 
+  if ! command -v pip >/dev/null 2>&1; then
+    echo "Installing pip"
+    apt -y install python3-pip
+  fi
+
+  pip install pynvim
+
   echo "Change shell to zsh"
   chsh -s $(which zsh)
 fi
