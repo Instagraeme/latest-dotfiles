@@ -180,8 +180,11 @@ case `uname` in
     source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
     alias update='apt update && apt -y upgrade && apt -y autoremove && apt -y autoclean'
-    plugins=(git colored-man-pages colorize z docker aliases command-not-found)
+    alias srestart='srestart_func(){ systemctl restart "$1" }; srestart_func'
+    alias sstart='sstart_func(){ systemctl start "$1" }; sstart_func' 
+    alias sstop='sstop_func(){ systemctl stop "$1" }; sstop_func'
     
+    plugins=(git colored-man-pages colorize z docker aliases command-not-found)
     ;;
 esac
 
