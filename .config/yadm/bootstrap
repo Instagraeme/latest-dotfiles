@@ -1,84 +1,173 @@
 #!/bin/sh
 
+# Reset
+Color_Off="\033[0m"       # Text Reset
+
+# Regular Colors
+Black="\033[0;30m"        # Black
+Red="\033[0;31m"          # Red
+Green="\033[0;32m"        # Green
+Yellow="\033[0;33m"       # Yellow
+Blue="\033[0;34m"         # Blue
+Purple="\033[0;35m"       # Purple
+Cyan="\033[0;36m"         # Cyan
+White="\033[0;37m"        # White
+
+# Bold
+BBlack="\033[1;30m"       # Black
+BRed="\033[1;31m"         # Red
+BGreen="\033[1;32m"       # Green
+BYellow="\033[1;33m"      # Yellow
+BBlue="\033[1;34m"        # Blue
+BPurple="\033[1;35m"      # Purple
+BCyan="\033[1;36m"        # Cyan
+BWhite="\033[1;37m"       # White
+
+# Underline
+UBlack="\033[4;30m"       # Black
+URed="\033[4;31m"         # Red
+UGreen="\033[4;32m"       # Green
+UYellow="\033[4;33m"      # Yellow
+UBlue="\033[4;34m"        # Blue
+UPurple="\033[4;35m"      # Purple
+UCyan="\033[4;36m"        # Cyan
+UWhite="\033[4;37m"       # White
+
+# Background
+On_Black="\033[40m"       # Black
+On_Red="\033[41m"         # Red
+On_Green="\033[42m"       # Green
+On_Yellow="\033[43m"      # Yellow
+On_Blue="\033[44m"        # Blue
+On_Purple="\033[45m"      # Purple
+On_Cyan="\033[46m"        # Cyan
+On_White="\033[47m"       # White
+
+# High Intensty
+IBlack="\033[0;90m"       # Black
+IRed="\033[0;91m"         # Red
+IGreen="\033[0;92m"       # Green
+IYellow="\033[0;93m"      # Yellow
+IBlue="\033[0;94m"        # Blue
+IPurple="\033[0;95m"      # Purple
+ICyan="\033[0;96m"        # Cyan
+IWhite="\033[0;97m"       # White
+
+# Bold High Intensty
+BIBlack="\033[1;90m"      # Black
+BIRed="\033[1;91m"        # Red
+BIGreen="\033[1;92m"      # Green
+BIYellow="\033[1;93m"     # Yellow
+BIBlue="\033[1;94m"       # Blue
+BIPurple="\033[1;95m"     # Purple
+BICyan="\033[1;96m"       # Cyan
+BIWhite="\033[1;97m"      # White
+
+# High Intensty backgrounds
+On_IBlack="\033[0;100m"   # Black
+On_IRed="\033[0;101m"     # Red
+On_IGreen="\033[0;102m"   # Green
+On_IYellow="\033[0;103m"  # Yellow
+On_IBlue="\033[0;104m"    # Blue
+On_IPurple="\033[10;95m"  # Purple
+On_ICyan="\033[0;106m"    # Cyan
+On_IWhite="\033[0;107m"   # White
+
+
 system_type=$(uname -s)
 
+echo "${Cyan}------------------------------------"
+echo "-                                  -"
+echo "- Executing Bootstrap Script       -"
+echo "-                                  -"
+echo "------------------------------------$Color_Off"
+
+install_if_not_installed()
+{
+  if ! command -v "$2" >/dev/null 2>&1; then
+    echo "${Blue}Installing $1$Color_Off"
+    if [ "$system_type" = "Linux" ]; then
+      apt -y install $1
+    elif [ "$system_type" = "Darwin" ]; then
+      brew install $1
+    fi
+  else
+    echo "${Green}$1 already installed$Color_Off"
+  fi
+}
+
+install_if_file_not_found()
+{
+  if [ ! -f "$2" ]; then
+    echo  "${Blue}Installing $1$Color_Off"
+    if [ "$system_type" = "Linux" ]; then
+      apt -y install $1
+    elif [ "$system_type" = "Darwin" ]; then
+      brew install $1
+    fi
+  else
+    echo "${Green}$1 already installed$Color_Off"
+  fi
+}
+
+install_if_directory_not_found()
+{
+  if [ ! -d "$2" ]; then
+    echo "${Blue}Installing $1$Color_Off"
+    if [ "$system_type" = "Linux" ]; then
+      apt -y install $1
+    elif [ "$system_type" = "Darwin" ]; then
+      brew install $1
+    fi
+  else
+    echo "${Green}$1 already installed$Color_Off"
+  fi
+}
+
 if [ "$system_type" = "Linux" ]; then
-
+  echo "${Yellow}Linux System Detected$Color_Off"
   # update system
-  apt update && apt -y upgrade && apt -y autoremove && apt -y autoclean
-  
-  # install git if it is missing
-  if ! command -v bat >/dev/null 2>&1; then
-    echo "Installing git"
-     apt -y install git
-  fi
+  echo "${Yellow}Updating package list$Color_Off"
+  apt update 
+  echo "${Yellow}Upgrading packages$Color_Off"
+  apt -y upgrade 
+fi 
 
-  # install curl if it is missing
-  if ! command -v curl >/dev/null 2>&1; then
-    echo "Installing curl"
-     apt -y install curl
-  fi
+install_if_not_installed python3 python3
+install_if_not_installed curl curl
+install_if_not_installed neovim nvim
+install_if_not_installed exa exa
+install_if_not_installed gpg gpg
+install_if_not_installed command-not-found command-not-found
 
-  # install python3 if it is missing
-  if ! command -v python3 >/dev/null 2>&1; then
-    echo "Installing python 3"
-     apt -y install python3
-  fi
-  
-  # install neovim if it's missing
-  if ! command -v nvim >/dev/null 2>&1; then
-    echo "Installing Neovim"
-     apt -y install neovim 
-  fi
- 
-  # install exa if it's missing
-  if ! command -v exa >/dev/null 2>&1; then
-    echo "Installing exa"
-     apt -y install exa 
-  fi
+echo "${Blue}Installing encrypted files $Color_Off"
+GROUP=$(/usr/bin/id -g | groups)
+echo "${Green}"
+yadm decrypt
 
-  # install gpg if it is missing
-  if ! command -v gpg >/dev/null 2>&1; then
-    echo "Installing gpg"
-     apt -y install gpg 
-  fi
+chown -R $USER:$GROUP $HOME/.ssh
+echo "$Color_Off"
 
-  # install bat if it is missing
-  if ! command -v bat >/dev/null 2>&1; then
-    echo "Installing bat"
-     apt -y install bat 
-  fi
-  
-  # install command-not-found if it is missing
-  if ! command -v command-not-found >/dev/null 2>&1; then
-    echo "Installing command-not-found"
-     apt -y install command-not-found
-     apt update
-     apt-file update
-     update-command-not-found
-  fi
+if [ "$system_type" = "Linux" ]; then
+  install_if_not_installed bat batcat
 
-  # install zsh-autosuggestions if it is missing
-  if [ ! -f "/opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
-    echo "Installing zsh-autosuggestions" 
-     apt -y install zsh-autosuggestions
-  fi
-
-  # install zsh-syntax-highlighting if it is missing
-  if [ ! -f "/opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
-    echo "Installing zsh-syntax-highlighting" 
-     apt -y install zsh-syntax-highlighting
-  fi
-
-  if ! command -v pip >/dev/null 2>&1; then
-    echo "Installing pip"
-    apt -y install python3-pip
-  fi
-
+  install_if_not_installed python3-pip pip3
+  echo "${Yellow}Installing pynvim$Color_Off"
   pip install pynvim
 
-  echo "Change shell to zsh"
+  install_if_file_not_found zsh-autosuggestions /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+  install_if_file_not_found zsh-syntax-highlighting /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+  echo "${Yellow}Change shell to zsh$Color_Off"
   chsh -s $(which zsh)
+
+  echo "${Yellow}Removing unused packages$Color_Off"
+  apt -y autoremove 
+
+  echo "${Yellow}Cleaning packages$Color_Off"
+  apt -y autoclean
+  
+  update-command-not-found
 fi
 
 
@@ -95,54 +184,12 @@ if [ "$system_type" = "Darwin" ]; then
     brew bundle --global
   fi
   
-  # install neovim if it's missing
-  if ! command -v nvim >/dev/null 2>&1; then
-    echo "Installing Neovim"
-    brew install nvim 
-  fi
- 
-  # install exa if it's missing
-  if ! command -v exa >/dev/null 2>&1; then
-    echo "Installing exa"
-    brew install exa 
-  fi
+  install_if_not_installed bat bat
 
-  # install gpg if it is missing
-  if ! command -v gpg >/dev/null 2>&1; then
-    echo "Installing gpg"
-    brew install gpg 
-  fi
-
-  # install bat if it is missing
-  if ! command -v bat >/dev/null 2>&1; then
-    echo "Installing bat"
-    brew install bat 
-  fi
-
-  # install zsh-autosuggestions if it is missing
-  if [ ! -f "/opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
-    echo "Installing zsh-autosuggestions" 
-    brew install zsh-autosuggestions
-  fi
-
-  # install zsh-syntax-highlighting if it is missing
-  if [ ! -f "/opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
-    echo "Installing zsh-syntax-highlighting" 
-    brew install zsh-syntax-highlighting
-  fi
+  install_if_file_not_found zsh-autosuggestions /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+  install_if_file_not_found zsh-syntax-highlighting /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+  install_if_directory_not_found zsh-completions /opt/homebrew/share/zsh-completions
   
-  # install zsh-completions if it is missing
-  if [ ! -d "/opt/homebrew/share/zsh-completions" ]; then
-    echo "Installing zsh-completions" 
-    brew install zsh-completions
-  fi
-  
-  if ! command -v command-not-found >/dev/null 2>&1; then
-    echo "Installing command-not-found"
-     brew install command-not-found
-     update-command-not-found
-  fi
- 
   if ! mdfind "kMDItemCFBundleIdentifier == com.googlecode.iterm2" >/dev/null 2>&1; then
     echo "Installing iTerm2" 
     brew cask install iterm2
@@ -170,4 +217,11 @@ if [ ! -d "$HOME/.oh-my-zsh" ]; then
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc
 
 fi
+
+echo "${Cyan}------------------------------------"
+echo "-                                  -"
+echo "- Bootstrap Script Finished        -"
+echo "-                                  -"
+echo "------------------------------------$Color_Off"
+
 
